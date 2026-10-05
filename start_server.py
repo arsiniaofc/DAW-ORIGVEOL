@@ -247,6 +247,21 @@ def run_server():
     
     base_dir = os.path.dirname(os.path.abspath(__file__))
     dist_dir = os.path.join(base_dir, "dist")
+    
+    # Auto-build frontend bundle if dist folder is missing so browser never gets raw uncompiled .tsx
+    if not os.path.exists(os.path.join(dist_dir, "index.html")):
+        print("[AetherDAW Launcher] Production build ('dist') not found. Building web bundle...")
+        try:
+            subprocess.run(["npm", "run", "build"], cwd=base_dir, check=True)
+            print("[AetherDAW Launcher] Web bundle built successfully!")
+        except Exception as err:
+            print(f"[AetherDAW Launcher] Note: Could not run 'npm run build' ({err}). Launching Node dev server...")
+            try:
+                subprocess.run(["npm", "run", "dev"], cwd=base_dir)
+                return
+            except Exception as node_err:
+                print(f"[AetherDAW Launcher] Error: {node_err}")
+
     web_dir = dist_dir if os.path.exists(dist_dir) else base_dir
     os.chdir(web_dir)
 

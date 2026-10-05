@@ -1026,17 +1026,33 @@ app.post('/api/project/collect', (req: Request, res: Response) => {
 
 // Start server
 async function start() {
-  if (process.env.NODE_ENV !== 'production') {
+  const distDir = path.join(__dirname, 'dist');
+  const hasDist = fs.existsSync(path.join(distDir, 'index.html'));
+  const isProd = process.env.NODE_ENV === 'production' && hasDist;
+
+  if (!isProd) {
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
     });
     app.use(vite.middlewares);
+
+    // SPA Fallback: Transform index.html with Vite for development
+    app.use('*', async (req: Request, res: Response, next) => {
+      const url = req.originalUrl;
+      try {
+        let template = fs.readFileSync(path.resolve(__dirname, 'index.html'), 'utf-8');
+        template = await vite.transformIndexHtml(url, template);
+        res.status(200).set({ 'Content-Type': 'text/html' }).end(template);
+      } catch (e: any) {
+        vite.ssrFixStacktrace(e);
+        next(e);
+      }
+    });
   } else {
-    const distPath = path.join(__dirname, 'dist');
-    app.use(express.static(distPath));
+    app.use(express.static(distDir));
     app.get('*', (_req: Request, res: Response) => {
-      res.sendFile(path.join(distPath, 'index.html'));
+      res.sendFile(path.join(distDir, 'index.html'));
     });
   }
 
