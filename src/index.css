@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    overflow: hidden;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+}
+
+/* Sleek dark scrollbars for DAW */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #101217;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #252a38;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #363d50;
+}
+
+/* Custom range input track */
+input[type="range"] {
+  accent-color: #10b981;
+}

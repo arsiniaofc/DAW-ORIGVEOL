@@ -1,0 +1,6 @@
+{
+  "name": "AetherDAW - Experimental & Microtonal Digital Audio Workstation",
+  "description": "Full-featured experimental DAW with microtonal tuning (N-TET), custom rhythm structures, procedural scales, piano roll, timeline arranger, mixer, sample browser, and VST plugin bridge.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
